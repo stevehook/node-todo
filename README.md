@@ -14,6 +14,10 @@ You will need a couple of new Postgres databases:
     $ createdb --no-password node_todo_development
     $ createdb --no-password node_todo_test
 
+Create the schema from the SQL schema script provided:
+
+    $ psql -d node_todo_development < server/data/schema.sql
+
 ###Seed data
 
 Running the seeds.js script will create the test user, bob@example.com,

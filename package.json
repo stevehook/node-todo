@@ -4,7 +4,8 @@
   "description": "Express server for a todo application API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "massive": "massive -d node_todo_development"
   },
   "author": "Steve Hook",
   "license": "ISC",

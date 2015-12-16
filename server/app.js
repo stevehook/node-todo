@@ -9,6 +9,13 @@ var users = require('./routes/users');
 
 var app = express();
 
+// Set up massive database interface
+const massive = require('massive');
+const connectionString = 'postgres://stevehook:@localhost/lotus_todo_development';
+const massiveInstance = massive.connectSync({connectionString : connectionString}) 
+
+app.set('db', massiveInstance);
+
 // app.use(logger('dev'));
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));

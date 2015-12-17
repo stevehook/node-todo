@@ -20,7 +20,7 @@ describe('GET /apis/sessions', function() {
 
   it('returns success when I provide a valid token', function(done) {
     request(app)
-      .get('/login')
+      .get('/api/sessions')
       .set('authorization', 'bearerToken foo')
       .expect(200, done);
   });

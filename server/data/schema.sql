@@ -29,19 +29,9 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
---
--- Name: schema_migrations; Type: TABLE; Schema: public; Tablespace: 
---
-
-CREATE TABLE schema_migrations (
-    filename text NOT NULL
-);
 
 
---
--- Name: sessions; Type: TABLE; Schema: public; Tablespace: 
---
-
+-- sessions
 CREATE TABLE sessions (
     sid text NOT NULL,
     session text NOT NULL,
@@ -49,11 +39,10 @@ CREATE TABLE sessions (
     updated_at timestamp without time zone
 );
 
+ALTER TABLE ONLY sessions
+    ADD CONSTRAINT sessions_pkey PRIMARY KEY (sid);
 
---
--- Name: tasks; Type: TABLE; Schema: public; Tablespace: 
---
-
+-- tasks
 CREATE TABLE tasks (
     id integer NOT NULL,
     title text NOT NULL,
@@ -66,11 +55,6 @@ CREATE TABLE tasks (
     user_id integer NOT NULL
 );
 
-
---
--- Name: tasks_id_seq; Type: SEQUENCE; Schema: public;
---
-
 CREATE SEQUENCE tasks_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -78,18 +62,14 @@ CREATE SEQUENCE tasks_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- Name: tasks_id_seq; Type: SEQUENCE OWNED BY; Schema: public;
---
-
 ALTER SEQUENCE tasks_id_seq OWNED BY tasks.id;
 
+ALTER TABLE ONLY tasks ALTER COLUMN id SET DEFAULT nextval('tasks_id_seq'::regclass);
 
---
--- Name: users; Type: TABLE; Schema: public; Tablespace: 
---
+ALTER TABLE ONLY tasks
+    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
 
+-- users
 CREATE TABLE users (
     id integer NOT NULL,
     name text NOT NULL,
@@ -100,10 +80,6 @@ CREATE TABLE users (
     last_logged_in_at timestamp without time zone
 );
 
---
--- Name: users_id_seq; Type: SEQUENCE; Schema: public
---
-
 CREATE SEQUENCE users_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -111,57 +87,25 @@ CREATE SEQUENCE users_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
---
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
-
---
--- Name: id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE ONLY tasks ALTER COLUMN id SET DEFAULT nextval('tasks_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public
---
-
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
-
-
---
--- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Tablespace: 
---
-
-ALTER TABLE ONLY schema_migrations
-    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (filename);
-
-
---
--- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Tablespace: 
---
-
-ALTER TABLE ONLY sessions
-    ADD CONSTRAINT sessions_pkey PRIMARY KEY (sid);
-
-
---
--- Name: tasks_pkey; Type: CONSTRAINT; Schema: public; Tablespace: 
---
-
-ALTER TABLE ONLY tasks
-    ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
-
-
---
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Tablespace: 
---
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
+-- tokens
+CREATE TABLE tokens (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    token text NOT NULL
+);
 
+CREATE SEQUENCE tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE tokens_id_seq OWNED BY tokens.id;

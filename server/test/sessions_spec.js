@@ -25,16 +25,16 @@ describe('GET /apis/sessions', function() {
       .expect(200, done);
   });
 
-  it('returns Unauthorised (401) when I provide an invalid token', function(done) {
+  it('returns Forbidden (403) when I provide an invalid token', function(done) {
     request(app)
       .get('/api/sessions')
       .set('authorization', 'bearerToken bar')
-      .expect(401, done);
+      .expect(403, done);
   });
 
-  it('returns Unauthorised (401) when I do not provide a token', function(done) {
+  it('returns Forbidden (403) when I do not provide a token', function(done) {
     request(app)
       .get('/api/sessions')
-      .expect(401, done);
+      .expect(403, done);
   });
 });

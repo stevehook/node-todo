@@ -14,7 +14,7 @@ const app = express();
 // Set up massive database interface
 const massive = require('massive');
 const connectionString = 'postgres://stevehook:@localhost/lotus_todo_development';
-const massiveInstance = massive.connectSync({connectionString : connectionString}) 
+const massiveInstance = massive.connectSync({connectionString : connectionString});
 
 app.set('db', massiveInstance);
 

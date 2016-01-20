@@ -6,9 +6,9 @@ const app = require('../app'),
 
 describe('GET /apis/sessions', function() {
   let user;
+  let db = app.get('db');
 
   beforeEach(function(done) {
-    var db = app.get('db');
     db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
       db.tokens.save({ user_id: user.id, token: 'foo' }, (err, user) => {
         done();
@@ -16,8 +16,11 @@ describe('GET /apis/sessions', function() {
     });
   });
   afterEach(function(done) {
-    // TODO: Tear down data
-    done();
+    db.users.destroy({}, (err, _) => {
+      db.tokens.destroy({}, (err, _) => {
+        done();
+      });
+    });
   });
 
   it('returns success when I provide a valid token', function(done) {

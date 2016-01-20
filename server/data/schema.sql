@@ -101,5 +101,7 @@ CREATE SEQUENCE tokens_id_seq
 
 ALTER SEQUENCE tokens_id_seq OWNED BY tokens.id;
 
+ALTER TABLE ONLY tokens ALTER COLUMN id SET DEFAULT nextval('tokens_id_seq'::regclass);
+
 ALTER TABLE ONLY tokens
     ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);

@@ -2,16 +2,18 @@
 
 const app = require('../app'),
       request = require('supertest'),
-      // db = require('../models'),
-      // helpers = require('./specHelper'),
       expect = require('chai').expect;
 
 describe('GET /apis/sessions', function() {
   let user;
 
   beforeEach(function(done) {
-    // TODO: Set up a user
-    done();
+    var db = app.get('db');
+    db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
+      db.tokens.save({ user_id: user.id, token: 'foo' }, (err, user) => {
+        done();
+      });
+    });
   });
   afterEach(function(done) {
     // TODO: Tear down data

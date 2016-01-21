@@ -2,21 +2,21 @@
 
 const timeout = parseInt(process.env.TOKEN_TIMEOUT || 20);
 
-const verifyTokenTimeout = function(token, callback) {
+const verifyTokenTimeout = function(db, token, callback) {
   let now = new Date();
   let utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
   let twentyMinutesAgo = new Date(utc.setMinutes(utc.getMinutes() - timeout));
   if (token.updatedAt < twentyMinutesAgo) {
     callback(null, false);
   } else {
-    token.save().then(function() {
-      callback(null, true);
+    db.tokens.save(token, function(err, _) {
+      callback(err, true);
     });
   }
 };
 
 const authenticate = function(request, response, next) {
-  let db = request.app.db;
+  let db = request.app.get('db');
   let bearerHeader = request.headers.authorization;
   if (typeof bearerHeader !== 'undefined') {
     let bearer = bearerHeader.split(' ');
@@ -26,7 +26,7 @@ const authenticate = function(request, response, next) {
       request.token = bearerToken;
       db.tokens.findOne({ token: bearerToken }, function(err, token) {
         if (token) {
-          verifyTokenTimeout(token, function(err, verified) {
+          verifyTokenTimeout(db, token, function(err, verified) {
             if (err || !verified) {
               response.sendStatus(403);
             } else {

@@ -1,17 +1,26 @@
 'use strict';
 
-const app = require('../app'),
-      request = require('supertest'),
-      expect = require('chai').expect;
+const app = require('../app');
+const request = require('supertest');
+const expect = require('chai').expect;
+const bcrypt = require('bcrypt');
 
-describe('GET /apis/sessions', function() {
+const hashPassword = function(password, done) {
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(password, salt, done);
+  });
+};
+
+describe('/apis/sessions', function() {
   let user;
   let db = app.get('db');
 
   beforeEach(function(done) {
-    db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
-      db.tokens.save({ user_id: user.id, token: 'foo' }, (err, user) => {
-        done();
+    hashPassword('secret', (err, hash) => {
+      db.users.save({ name: 'Alice', email: 'alice@example.com', password: hash }, (err, user) => {
+        db.tokens.save({ user_id: user.id, token: 'foo' }, (err, user) => {
+          done();
+        });
       });
     });
   });
@@ -46,7 +55,7 @@ describe('GET /apis/sessions', function() {
   });
 
   describe('POST /login API', function() {
-    var credentials = { email: 'bob@example.com', password: 'secret' };
+    var credentials = { email: 'alice@example.com', password: 'secret' };
 
     it('allows a user to login with the correct credentials', function(done) {
       request(app)
@@ -65,7 +74,7 @@ describe('GET /apis/sessions', function() {
           expect(json).to.be.defined;
           expect(json.success).to.eq(true);
           expect(json.data.name).to.eq('Bob Roberts');
-          expect(json.data.email).to.eq('bob@example.com');
+          expect(json.data.email).to.eq('alice@example.com');
           expect(json.token).to.be.defined;
           done();
         });

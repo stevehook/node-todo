@@ -65,6 +65,7 @@ CREATE TABLE users (
     id integer NOT NULL,
     name text NOT NULL,
     email text NOT NULL,
+    password text,
     deleted boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,

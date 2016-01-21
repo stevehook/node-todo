@@ -25,9 +25,6 @@ app.set('db', massiveInstance);
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use('/api/sessions', sessions);
-app.get('/api/sessions', authenticate, function(req, res, next) {
-  res.send('Not implemented yet');
-});
+app.use('/api/sessions', sessions);
 
 module.exports = app;

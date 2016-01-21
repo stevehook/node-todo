@@ -8,17 +8,33 @@ describe('GET /apis/sessions', function() {
   let user;
   let db = app.get('db');
 
-  beforeEach(function(done) {
+  let createTestUser = function(next, done) {
     db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
-      db.tokens.save({ user_id: user.id, token: 'foo' }, (err, user) => {
-        done();
+      db.tokens.save({ user_id: user.id, token: 'foo' }, (err, token) => {
+        next(user, done);
       });
     });
+  };
+  let createTestTasks = function(user, done) {
+    db.tasks.save({ user_id: user.id, title: 'Walk the dog', completed: false, order: 1 }, (err, task) => {
+      db.tasks.save({ user_id: user.id, title: 'Make the dinner', completed: false, order: 1 }, (err, task) => {
+        db.tasks.save({ user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }, (err, task) => {
+          done();
+        });
+      });
+    });
+  };
+
+  beforeEach(function(done) {
+    createTestUser(createTestTasks, done);
   });
+
   afterEach(function(done) {
     db.users.destroy({}, (err, _) => {
       db.tokens.destroy({}, (err, _) => {
-        done();
+        db.tasks.destroy({}, (err, _) => {
+          done();
+        });
       });
     });
   });

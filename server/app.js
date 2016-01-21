@@ -10,6 +10,7 @@ const authenticate = require('./lib/authenticate');
 // const bodyParser = require('body-parser');
 
 const sessions = require('./routes/sessions');
+const tasks = require('./routes/tasks');
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.set('db', massiveInstance);
 // app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/sessions', sessions);
+app.use('/api/tasks', tasks);
 
 module.exports = app;

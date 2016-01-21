@@ -35,13 +35,9 @@ describe('GET /apis/tasks', function() {
   });
 
   afterEach(function(done) {
-    db.users.destroy({}, (err, _) => {
-      db.tokens.destroy({}, (err, _) => {
-        db.tasks.destroy({}, (err, _) => {
-          done();
-        });
-      });
-    });
+    [db.users, db.tokens, db.tasks].reduce((last, collection) => {
+      return () => { collection.destroy({}, (err, _) => { last(); }); }
+    }, done)();
   });
 
   it('returns success', function(done) {

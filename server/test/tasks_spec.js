@@ -4,7 +4,7 @@ const app = require('../app'),
       request = require('supertest'),
       expect = require('chai').expect;
 
-describe('GET /apis/sessions', function() {
+describe('GET /apis/tasks', function() {
   let user;
   let db = app.get('db');
 
@@ -15,15 +15,20 @@ describe('GET /apis/sessions', function() {
       });
     });
   };
-  let createTestTasks = function(user, done) {
-    db.tasks.save({ user_id: user.id, title: 'Walk the dog', completed: false, order: 1 }, (err, task) => {
-      db.tasks.save({ user_id: user.id, title: 'Make the dinner', completed: false, order: 1 }, (err, task) => {
-        db.tasks.save({ user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }, (err, task) => {
-          done();
-        });
-      });
-    });
-  };
+  let createTestTasks = (user, done) => {
+      let tasks = [
+        { user_id: user.id, title: 'Walk the dog', completed: false, order: 1 },
+        { user_id: user.id, title: 'Make the dinner', completed: false, order: 1 },
+        { user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }
+      ];
+      tasks.reduce((last, task) => {
+        return () => { db.tasks.save(task, (err, _) => {
+            last();
+          });
+        };
+      }, done)();
+    };
+
 
   beforeEach(function(done) {
     createTestUser(createTestTasks, done);

@@ -73,7 +73,7 @@ describe('/apis/sessions', function() {
           var json = JSON.parse(res.text);
           expect(json).to.be.defined;
           expect(json.success).to.eq(true);
-          expect(json.data.name).to.eq('Bob Roberts');
+          expect(json.data.name).to.eq('Alice');
           expect(json.data.email).to.eq('alice@example.com');
           expect(json.token).to.be.defined;
           done();
@@ -83,7 +83,7 @@ describe('/apis/sessions', function() {
     it('does not allow a user to login with the wrong password', function(done) {
       request(app)
         .post('/api/sessions')
-        .send({ email: 'bob@example.com', password: 'wrong' })
+        .send({ email: 'alice@example.com', password: 'wrong' })
         .expect(403, done);
     });
 

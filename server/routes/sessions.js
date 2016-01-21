@@ -22,11 +22,11 @@ router.post('/', function(request, response, next) {
     if (user) {
       checkPassword(user, request.body.password, (err, matched) => {
         if (matched) {
-          var tokenString = jwt.sign({ data: user, timestamp: new Date()}, process.env.JWT_SECRET, { expiresInMinutes: 60 });
-          db.tokens.create({
-            userId: user.id,
+          var tokenString = jwt.sign({ data: user, timestamp: new Date()}, process.env.JWT_SECRET, { expiresInSeconds: 3600 });
+          db.tokens.save({
+            user_id: user.id,
             token: tokenString
-          }, (token) => {
+          }, (err, token) => {
             response.status(200).json({
               success: true,
               data: {

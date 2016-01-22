@@ -3,13 +3,7 @@
 const app = require('../app');
 const request = require('supertest');
 const expect = require('chai').expect;
-const bcrypt = require('bcrypt');
-
-const hashPassword = function(password, done) {
-  bcrypt.genSalt(10, function(err, salt) {
-    bcrypt.hash(password, salt, done);
-  });
-};
+const hashPassword = require('../lib/hashPassword');
 
 describe('/apis/sessions', function() {
   let user;

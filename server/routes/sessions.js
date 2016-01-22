@@ -37,7 +37,6 @@ router.post('/', function(request, response, next) {
             });
           });
         } else {
-          console.log(request.body, err, matched);
           response.status(403).json({ success: false, error: 'Login failed' });
         }
       });

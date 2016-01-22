@@ -3,10 +3,7 @@
 require('dotenv').config();
 
 const hashPassword = require('../lib/hashPassword');
-
-const massive = require('massive');
-const connectionString = 'postgres://stevehook:@localhost/node_todo_development';
-const db = massive.connectSync({connectionString : connectionString});
+const db = require('../lib/database');
 
 db.users.destroy({}, (err, _) => {
   hashPassword('secret', (err, hash) => {

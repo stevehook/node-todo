@@ -15,13 +15,8 @@ const sessions = require('./routes/sessions');
 const tasks = require('./routes/tasks');
 
 const app = express();
-
-// Set up massive database interface
-const massive = require('massive');
-const connectionString = 'postgres://stevehook:@localhost/node_todo_development';
-const massiveInstance = massive.connectSync({connectionString : connectionString});
-
-app.set('db', massiveInstance);
+const db = require('./lib/database');
+app.set('db', db);
 
 // app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha ./server/test",
     "massive": "massive -d node_todo_development",
-    "start": "node ./server/bin/www"
+    "start": "node ./server/bin/www",
+    "seed": "node ./server/data/seeds.js"
   },
   "author": "Steve Hook",
   "license": "ISC",

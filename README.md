@@ -17,16 +17,17 @@ You will need a couple of new Postgres databases:
 Create the schema from the SQL schema script provided:
 
     $ psql -d node_todo_development < server/data/schema.sql
+    $ psql -d node_todo_test < server/data/schema.sql
 
 ###Seed data
 
 Running the seeds.js script will create the test user, bob@example.com,
 with password secret, and some sample data.
 
-    $ npm run ?
+    $ npm run seed
 
 ###Tests
 
-To run all tests once:
+Tests are written in Mocha. To run all tests:
 
     $ npm test

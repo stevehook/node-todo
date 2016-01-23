@@ -7,7 +7,8 @@
     "test": "mocha ./server/test",
     "massive": "massive -d node_todo_development",
     "start": "node ./server/bin/www",
-    "seed": "node ./server/data/seeds.js"
+    "seed": "node ./server/data/seeds.js",
+    "debug": "node-debug ./server/bin/www"
   },
   "author": "Steve Hook",
   "license": "ISC",

@@ -31,3 +31,11 @@ with password secret, and some sample data.
 Tests are written in Mocha. To run all tests:
 
     $ npm test
+
+###Debugging
+
+To debug the server install `node-inspector` and then run the debug
+task:
+
+    $ npm install -g node-inspector
+    $ npm run debug

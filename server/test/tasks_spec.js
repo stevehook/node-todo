@@ -4,8 +4,9 @@ const app = require('../app'),
       request = require('supertest'),
       expect = require('chai').expect;
 
-describe('GET /apis/tasks', function() {
+describe('/apis/tasks', function() {
   let user;
+  let tasks = [];
   let db = app.get('db');
 
   let createTestUser = function(next, done) {
@@ -16,13 +17,14 @@ describe('GET /apis/tasks', function() {
     });
   };
   let createTestTasks = (user, done) => {
-      let tasks = [
+      let taskFixtures = [
         { user_id: user.id, title: 'Walk the dog', completed: false, order: 1 },
         { user_id: user.id, title: 'Make the dinner', completed: false, order: 1 },
         { user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }
       ];
-      tasks.reduce((last, task) => {
-        return () => { db.tasks.save(task, (err, _) => {
+      taskFixtures.reverse().reduce((last, taskFixture) => {
+        return () => { db.tasks.save(taskFixture, (err, task) => {
+            tasks.push(task);
             last();
           });
         };
@@ -40,21 +42,43 @@ describe('GET /apis/tasks', function() {
     }, done)();
   });
 
-  it('returns success', function(done) {
-    request(app)
-      .get('/api/tasks')
-      .set('authorization', 'bearerToken foo')
-      .expect(200, done);
+  describe('GET /apis/tasks', function() {
+    it('returns success', function(done) {
+      request(app)
+        .get('/api/tasks')
+        .set('authorization', 'bearerToken foo')
+        .expect(200, done);
+    });
+
+    it('returns a list of tasks for the current user', function(done) {
+      request(app)
+        .get('/api/tasks')
+        .set('authorization', 'bearerToken foo')
+        .end(function(err, res) {
+          var tasks = JSON.parse(res.text);
+          expect(tasks.length).to.eq(2);
+          done();
+        });
+    });
   });
 
-  it('returns a list of tasks for the current user', function(done) {
-    request(app)
-      .get('/api/tasks')
-      .set('authorization', 'bearerToken foo')
-      .end(function(err, res) {
-        var tasks = JSON.parse(res.text);
-        expect(tasks.length).to.eq(2);
-        done();
-      });
+  describe('GET /apis/task/:id', function() {
+    it('returns success', function(done) {
+      request(app)
+        .get('/api/task/' + tasks[0].id)
+        .set('authorization', 'bearerToken foo')
+        .expect(200, done);
+    });
+
+    it('returns the task data', function(done) {
+      request(app)
+        .get('/api/task/' + tasks[0].id)
+        .set('authorization', 'bearerToken foo')
+        .end(function(err, res) {
+          var task = JSON.parse(res.text);
+          expect(task.title).to.eq('Walk the dog');
+          done();
+        });
+    });
   });
 });

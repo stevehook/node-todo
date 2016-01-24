@@ -6,10 +6,10 @@ const app = require('../app'),
 
 describe('/apis/tasks', function() {
   let user;
-  let tasks = [];
+  let tasks;
   let db = app.get('db');
 
-  let createTestUser = function(next, done) {
+  let createTestUser = (next, done) => {
     db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
       db.tokens.save({ user_id: user.id, token: 'foo' }, (err, token) => {
         next(user, done);
@@ -17,20 +17,20 @@ describe('/apis/tasks', function() {
     });
   };
   let createTestTasks = (user, done) => {
-      let taskFixtures = [
-        { user_id: user.id, title: 'Walk the dog', completed: false, order: 1 },
-        { user_id: user.id, title: 'Make the dinner', completed: false, order: 1 },
-        { user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }
-      ];
-      taskFixtures.reverse().reduce((last, taskFixture) => {
-        return () => { db.tasks.save(taskFixture, (err, task) => {
-            tasks.push(task);
-            last();
-          });
-        };
-      }, done)();
-    };
-
+    let taskFixtures = [
+      { user_id: user.id, title: 'Walk the dog', completed: false, order: 1 },
+      { user_id: user.id, title: 'Make the dinner', completed: false, order: 1 },
+      { user_id: user.id + 1, title: 'Do the washing up', completed: false, order: 1 }
+    ];
+    tasks = [];
+    taskFixtures.reverse().reduce((last, taskFixture) => {
+      return () => { db.tasks.save(taskFixture, (err, task) => {
+          tasks.push(task);
+          last();
+        });
+      };
+    }, done)();
+  };
 
   beforeEach(function(done) {
     createTestUser(createTestTasks, done);

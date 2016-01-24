@@ -6,17 +6,17 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get('/', authenticate, function(req, res, next) {
+router.get('/', authenticate, (req, res, next) => {
   res.send('Not implemented yet');
 });
 
-var checkPassword = function(user, password, done) {
+var checkPassword = (user, password, done) => {
   bcrypt.compare(password, user.password, (err, res) => {
     done(err, res);
   });
 };
 
-router.post('/', function(request, response, next) {
+router.post('/', (request, response, next) => {
   let db = request.app.get('db');
   db.users.findOne({ email: request.body.email }, (err, user) => {
     if (user) {

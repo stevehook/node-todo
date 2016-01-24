@@ -4,7 +4,7 @@ const app = require('../app'),
       request = require('supertest'),
       expect = require('chai').expect;
 
-describe('/apis/tasks', function() {
+describe('/apis/tasks', () => {
   let user;
   let tasks;
   let db = app.get('db');
@@ -32,29 +32,29 @@ describe('/apis/tasks', function() {
     }, done)();
   };
 
-  beforeEach(function(done) {
+  beforeEach((done) => {
     createTestUser(createTestTasks, done);
   });
 
-  afterEach(function(done) {
+  afterEach((done) => {
     [db.users, db.tokens, db.tasks].reduce((last, collection) => {
       return () => { collection.destroy({}, (err, _) => { last(); }); }
     }, done)();
   });
 
-  describe('GET /apis/tasks', function() {
-    it('returns success', function(done) {
+  describe('GET /apis/tasks', () => {
+    it('returns success', (done) => {
       request(app)
         .get('/api/tasks')
         .set('authorization', 'bearerToken foo')
         .expect(200, done);
     });
 
-    it('returns a list of tasks for the current user', function(done) {
+    it('returns a list of tasks for the current user', (done) => {
       request(app)
         .get('/api/tasks')
         .set('authorization', 'bearerToken foo')
-        .end(function(err, res) {
+        .end((err, res) => {
           var tasks = JSON.parse(res.text);
           expect(tasks.length).to.eq(2);
           done();
@@ -62,19 +62,19 @@ describe('/apis/tasks', function() {
     });
   });
 
-  describe('GET /apis/task/:id', function() {
-    it('returns success', function(done) {
+  describe('GET /apis/task/:id', () => {
+    it('returns success', (done) => {
       request(app)
         .get('/api/task/' + tasks[0].id)
         .set('authorization', 'bearerToken foo')
         .expect(200, done);
     });
 
-    it('returns the task data', function(done) {
+    it('returns the task data', (done) => {
       request(app)
         .get('/api/task/' + tasks[0].id)
         .set('authorization', 'bearerToken foo')
-        .end(function(err, res) {
+        .end((err, res) => {
           var task = JSON.parse(res.text);
           expect(task.title).to.eq('Walk the dog');
           done();

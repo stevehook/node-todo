@@ -2,20 +2,20 @@
 
 const timeout = parseInt(process.env.TOKEN_TIMEOUT || 20);
 
-const verifyTokenTimeout = function(db, token, callback) {
+const verifyTokenTimeout = (db, token, callback) => {
   let now = new Date();
   let utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
   let twentyMinutesAgo = new Date(utc.setMinutes(utc.getMinutes() - timeout));
   if (token.updatedAt < twentyMinutesAgo) {
     callback(null, false);
   } else {
-    db.tokens.save(token, function(err, _) {
+    db.tokens.save(token, (err, _) => {
       callback(err, true);
     });
   }
 };
 
-const authenticate = function(request, response, next) {
+const authenticate = (request, response, next) => {
   let db = request.app.get('db');
   let bearerHeader = request.headers.authorization;
   if (typeof bearerHeader !== 'undefined') {
@@ -24,13 +24,13 @@ const authenticate = function(request, response, next) {
     request.currentUser = undefined;
     if (bearerToken) {
       request.token = bearerToken;
-      db.tokens.findOne({ token: bearerToken }, function(err, token) {
+      db.tokens.findOne({ token: bearerToken }, (err, token) => {
         if (token) {
-          verifyTokenTimeout(db, token, function(err, verified) {
+          verifyTokenTimeout(db, token, (err, verified) => {
             if (err || !verified) {
               response.sendStatus(403);
             } else {
-              let user = db.users.findOne({ id: token.user_id }, function(err, user) {
+              let user = db.users.findOne({ id: token.user_id }, (err, user) => {
                 request.currentUser = user;
                 next();
               });

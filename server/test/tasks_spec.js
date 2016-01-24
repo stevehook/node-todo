@@ -10,7 +10,8 @@ describe('/apis/tasks', () => {
   let db = app.get('db');
 
   let createTestUser = (next, done) => {
-    db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, user) => {
+    db.users.save({ name: 'Alice', email: 'alice@example.com' }, (err, newUser) => {
+      user = newUser;
       db.tokens.save({ user_id: user.id, token: 'foo' }, (err, token) => {
         next(user, done);
       });
@@ -99,8 +100,22 @@ describe('/apis/tasks', () => {
         .send(newTask)
         .set('authorization', 'bearerToken foo')
         .end(function() {
-          db.tasks.find({}, (err, tasks) => {
-            expect(tasks.length).to.equal(4);
+          db.tasks.find({ user_id: user.id }, (err, tasks) => {
+            expect(tasks.length).to.equal(3);
+            done();
+          });
+        });
+    });
+
+    it('returns unauthorized and does NOT create a new task with an incorrect token', function(done) {
+      request(app)
+        .post('/api/tasks')
+        .send(newTask)
+        .set('authorization', 'bearerToken bar')
+        .expect(401)
+        .end(function() {
+          db.tasks.find({ user_id: user.id }, (err, tasks) => {
+            expect(tasks.length).to.equal(2);
             done();
           });
         });

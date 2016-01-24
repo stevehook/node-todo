@@ -18,4 +18,13 @@ router.get('/tasks', authenticate, (request, response) => {
   });
 });
 
+router.post('/tasks', authenticate, (request, response) => {
+  let db = request.app.get('db');
+  let attributes = request.body;
+  attributes.user_id = request.currentUser.id;
+  db.tasks.save(attributes, (err, task) => {
+    response.status(201).json(task);
+  });
+});
+
 module.exports = router;

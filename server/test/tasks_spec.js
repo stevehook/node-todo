@@ -87,7 +87,7 @@ describe('/apis/tasks', () => {
 
     it('responds with success', function(done) {
       request(app)
-        .post('/tasks')
+        .post('/api/tasks')
         .send(newTask)
         .set('authorization', 'bearerToken foo')
         .expect(201, done);
@@ -95,7 +95,7 @@ describe('/apis/tasks', () => {
 
     it('creates a new task', function(done) {
       request(app)
-        .post('/tasks')
+        .post('/api/tasks')
         .send(newTask)
         .set('authorization', 'bearerToken foo')
         .end(function() {

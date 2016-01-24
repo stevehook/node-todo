@@ -81,4 +81,29 @@ describe('/apis/tasks', () => {
         });
     });
   });
+
+  describe('POST /tasks', function() {
+    var newTask = { title: 'Learn Node.js' };
+
+    it('responds with success', function(done) {
+      request(app)
+        .post('/tasks')
+        .send(newTask)
+        .set('authorization', 'bearerToken foo')
+        .expect(201, done);
+    });
+
+    it('creates a new task', function(done) {
+      request(app)
+        .post('/tasks')
+        .send(newTask)
+        .set('authorization', 'bearerToken foo')
+        .end(function() {
+          db.tasks.find({}, (err, tasks) => {
+            expect(tasks.length).to.equal(4);
+            done();
+          });
+        });
+    });
+  });
 });

@@ -12,6 +12,7 @@ const bodyParser = require('body-parser');
 // const favicon = require('serve-favicon');
 // const logger = require('morgan');
 
+const sessions = require('./routes/sessions');
 const sessionsApi = require('./routes/api/sessions');
 const tasksApi = require('./routes/api/tasks');
 
@@ -26,5 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', sessionsApi);
 app.use('/api', tasksApi);
+
+app.use('/', sessions);
 
 module.exports = app;

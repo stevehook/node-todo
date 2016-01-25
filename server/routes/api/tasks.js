@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const authenticate = require('../lib/authenticate');
+const authenticate = require('../../lib/authenticate');
 
 const taskRepository = {
   get: (request, callback) => {

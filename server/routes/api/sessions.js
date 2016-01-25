@@ -1,12 +1,12 @@
 'use strict';
 
 const express = require('express');
-const authenticate = require('../lib/authenticate');
+const authenticate = require('../../lib/authenticate');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-router.get('/', authenticate, (req, res, next) => {
+router.get('/sessions', authenticate, (req, res, next) => {
   res.send('Not implemented yet');
 });
 
@@ -16,7 +16,7 @@ var checkPassword = (user, password, done) => {
   });
 };
 
-router.post('/', (request, response, next) => {
+router.post('/sessions', (request, response, next) => {
   let db = request.app.get('db');
   db.users.findOne({ email: request.body.email }, (err, user) => {
     if (user) {

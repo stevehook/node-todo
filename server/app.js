@@ -15,10 +15,13 @@ const bodyParser = require('body-parser');
 const sessions = require('./routes/sessions');
 const sessionsApi = require('./routes/api/sessions');
 const tasksApi = require('./routes/api/tasks');
+require('ejs');
 
 const app = express();
 const db = require('./lib/database');
 app.set('db', db);
+app.set('views', 'server/views');
+app.set('view engine', 'ejs');
 
 // app.use(logger('dev'));
 app.use(bodyParser.json());

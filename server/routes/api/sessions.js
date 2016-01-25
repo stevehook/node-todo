@@ -5,8 +5,8 @@ const authenticate = require('../../lib/authenticate');
 const router = express.Router();
 const sessionRepository = require('../../lib/sessionRepository');
 
-router.get('/sessions', authenticate, (req, res, next) => {
-  res.send('Not implemented yet');
+router.get('/sessions', authenticate, (request, response, next) => {
+  response.status(200).json(request.currentUser);
 });
 
 router.post('/sessions', (request, response, next) => {

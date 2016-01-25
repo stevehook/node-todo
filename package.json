@@ -16,6 +16,7 @@
     "bcrypt": "0.8.5",
     "body-parser": "1.14.2",
     "dotenv": "2.0.0",
+    "ejs": "2.4.1",
     "express": "4.13.3",
     "jsonwebtoken": "5.5.4",
     "massive": "2.1.0"

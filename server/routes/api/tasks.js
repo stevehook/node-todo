@@ -13,20 +13,20 @@ const taskRepository = {
   },
 };
 
-const respondWith = (request, response, code, data) => {
+const respondWith = (request, response, view, code, data) => {
   if (request.accepts('json')) {
     response.status(code).json(data);
   } else {
-    response.render(code, data);
+    response.status(code).render(view, data);
   }
 };
 
 router.get('/task/:id', authenticate, (request, response) => {
   taskRepository.get(request, (err, code, data) => {
     if (err) {
-      respondWith(request, response, 500, {});
+      respondWith(request, response, 'show', 500, {});
     } else {
-      respondWith(request, response, code, data);
+      respondWith(request, response, 'show', code, data);
     }
   });
 });
